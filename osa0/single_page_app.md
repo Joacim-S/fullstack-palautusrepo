@@ -3,14 +3,7 @@ sequenceDiagram
     participant browser
     participant server
     
-    browser->>server: POST https://studies.cs.helsinki.fi/exampleapp/new_note Form Data: "note: Wake" 
-    activate server
-    Note left of server: Server adds the note to the table of notes
-    server-->>browser: redirect /exampleapp/notes
-    deactivate server
-    Note right of browser: Browser loads the page it was directed to
-    
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/notes
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa
     activate server
     server-->>browser: HTML document
     deactivate server
@@ -20,7 +13,7 @@ sequenceDiagram
     server-->>browser: the css file
     deactivate server
     
-    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/main.js
+    browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/spa.js
     activate server
     server-->>browser: the JavaScript file
     deactivate server
@@ -29,7 +22,7 @@ sequenceDiagram
     
     browser->>server: GET https://studies.cs.helsinki.fi/exampleapp/data.json
     activate server
-    server-->>browser: [{ "content": "PEDRO", "date": "2024-07-17T14:53:37.990Z"}, ... ]
+    server-->>browser: [{"content": "another note", "date": "2024-07-17T15:02:29.282Z"}, ...]
     deactivate server
 
     Note right of browser: The browser executes the callback function that renders the notes 
