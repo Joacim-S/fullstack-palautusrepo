@@ -1,11 +1,33 @@
 import { useState, useEffect } from 'react'
 import personService from './services/persons'
 
+const Notification = ({ message, color }) => {
+  const style = {
+    color: color,
+    background: 'lightgrey',
+    fontSize: 20,
+    borderStyle: 'solid',
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10
+  }
+
+  if (message === null) {
+    return null
+  }
+
+  return (
+    <div style={style}> {message} </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setSearch] = useState('')
+  const [NotificationMessage, setNotificationMessage] = useState(null)
+  const [notificationColor, setNoficationColor] = useState('green')
 
   useEffect(() => {
     personService.getAll()
@@ -40,6 +62,19 @@ const App = () => {
             setPersons(persons.map(person => person.id !== existingPerson.id ? person : returnedPerson))
             setNewNumber('')
             setNewName('')
+            setNotificationMessage(`Updated ${returnedPerson.name}`)
+            setNoficationColor('green')
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000)
+          })
+          .catch(error => {
+            setNotificationMessage(`Information of ${newName} has already been removed from server`)
+            setNoficationColor('red')
+            setTimeout(() => {
+              setNotificationMessage(null)
+            }, 5000)
+            setPersons(persons.filrer(person => person.id !== existingPerson.id))
           })
       }
     }
@@ -53,6 +88,11 @@ const App = () => {
           setPersons(persons.concat(returnedPerson))
           setNewNumber('')
           setNewName('')
+          setNotificationMessage(`Added ${returnedPerson.name}`)
+          setNoficationColor('green')
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
         })
     }
   }
@@ -64,12 +104,18 @@ const App = () => {
         .destroy(id)
         .then(deleted => {
           setPersons(persons.filter(person => person.id !== id))
+          setNotificationMessage(`Deleted ${deleted.name}`)
+          setNoficationColor('green')
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
         })
     }
   }
 
   return (
     <div>
+      <Notification message={NotificationMessage} color={notificationColor}/>
       <h2>Phonebook</h2>
       <Filer search={search} handleSearchChange={handleSearchChange} />
       <h3>add a new</h3>
