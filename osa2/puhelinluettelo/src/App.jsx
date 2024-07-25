@@ -102,9 +102,9 @@ const App = () => {
     if(confirm(`Delete ${person.name}`)){
       personService
         .destroy(id)
-        .then(deleted => {
+        .then(response => {
           setPersons(persons.filter(person => person.id !== id))
-          setNotificationMessage(`Deleted ${deleted.name}`)
+          setNotificationMessage(`Deleted ${person.name}`)
           setNoficationColor('green')
           setTimeout(() => {
             setNotificationMessage(null)
