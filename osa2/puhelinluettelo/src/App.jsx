@@ -69,8 +69,10 @@ const App = () => {
             }, 5000)
           })
           .catch(error => {
-            setPersons(persons.filter(person => person.id !== existingPerson.id))
-            setNotificationMessage(`Information of ${newName} has already been removed from server`)
+            if (error.response.status === 404) {
+              setPersons(persons.filter(person => person.id !== existingPerson.id))
+            }
+            setNotificationMessage(error.response.data.error)
             setNoficationColor('red')
             setTimeout(() => {
               setNotificationMessage(null)
