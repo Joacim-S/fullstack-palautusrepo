@@ -94,6 +94,14 @@ const App = () => {
             setNotificationMessage(null)
           }, 5000)
         })
+        .catch(error => {
+          console.log(error.response.data)
+          setNotificationMessage(error.response.data.error)
+          setNoficationColor('red')
+          setTimeout(() => {
+            setNotificationMessage(null)
+          }, 5000)
+        })
     }
   }
 
