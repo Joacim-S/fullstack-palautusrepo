@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{
+  "title": "Matin keittiö",
+  "author": "Matti",
+  "url": "https://www.google.com/",
+  "likes": 9000000000
+}
