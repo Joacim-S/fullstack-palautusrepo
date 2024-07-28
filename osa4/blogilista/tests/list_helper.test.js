@@ -118,3 +118,15 @@ describe('most blogs', () => {
     )
   })
 })
+
+describe('most likes', () => {
+  test('shows most popular author with correct likecount when list has many blogs', () => {
+    assert.deepStrictEqual(listHelper.mostLikes(blogs),
+      { author: "Edsger W. Dijkstra", likes: 17}
+    )
+  })
+
+  test('equals null when list is empty', () => {
+    assert.strictEqual(listHelper.mostLikes([]), null)
+  })
+})
