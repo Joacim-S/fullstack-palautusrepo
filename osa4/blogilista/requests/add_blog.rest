@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlRhbmVsaSIsImlkIjoiNjZhYTc4Nzg0YzQyOTE5NmJlOGFmMGMxIiwiaWF0IjoxNzIyNDU1MDMwLCJleHAiOjE3MjI0NTg2MzB9.e8T0K7bHhP0DMMrJYZyf9xm00HWhlmYygvAtM_yFI3o
 
 {
-  "title": "Matin keittiö",
+  "title": "Maijan keittiö",
   "author": "Matti",
   "url": "https://www.google.com/",
   "likes": 9000000000

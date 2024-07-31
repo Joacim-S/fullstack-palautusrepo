@@ -56,7 +56,27 @@ const usersInDb = async () => {
   return users.map(u => u.toJSON())
 }
 
+const createUserAndGetToken = async (api) => {
+  const result = await api
+    .post('/api/users')
+    .send(
+      {
+        username: 'Teuvo99',
+        name: 'Teuvo',
+        password: 'salaTeuvo'
+      }
+    )
+  const login = await api
+    .post('/api/login')
+    .send({
+      username: 'Teuvo99',
+      password: 'salaTeuvo'
+    })
+  return { token: `Bearer ${login.body.token}`, id: result.body.id.toString() }
+}
+
 module.exports = {
   blogs,
-  usersInDb
+  usersInDb,
+  createUserAndGetToken
 }
