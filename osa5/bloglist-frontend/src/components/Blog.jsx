@@ -32,19 +32,22 @@ const Blog = ({ blog, handleLike, user, handleDelete }) => {
         style={{ marginLeft: 5 }}>
           hide
       </button>
-      <br/>
-      {blog.url}
-      <br/>
-      likes: {blog.likes}
-      <button
-        onClick={() => handleLike({
-          ...blog,
-          likes: blog.likes+1,
-          user: blog.user.id })}>
-          like
-      </button>
-      <br/>
-      {blog.user.name}<br/>
+      <div>
+        {blog.url}
+      </div>
+      <div>
+        likes: {blog.likes}
+        <button
+          onClick={() => handleLike({
+            ...blog,
+            likes: blog.likes+1,
+            user: blog.user.id })}>
+            like
+        </button>
+      </div>
+      <div>
+        {blog.user.name}
+      </div>
       <button style={{
         display: blog.user.username && blog.user.username !== user
           ? 'none'
