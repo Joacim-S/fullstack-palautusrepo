@@ -31,7 +31,7 @@ blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) =
   const blog = await Blog.findById(request.params.id)
   if (!blog || blog.user.toString() === request.user._id.toString()){
     await Blog.findByIdAndDelete(request.params.id)
-    response.status(204).end()
+    return response.status(204).end()
   }
   return response.status(401).json({ error: 'user id does not match blog creator id' })
 })

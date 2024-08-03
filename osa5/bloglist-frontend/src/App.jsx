@@ -3,7 +3,7 @@ import Blog from './components/Blog'
 import blogService from './services/blogs'
 import LoginForm from './components/LoginForm'
 import loginService from './services/login'
-import CreateBlogForm from './components/CreateBlogForm'
+import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 
 const App = () => {
@@ -11,16 +11,13 @@ const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
   const [NotificationMessage, setNotificationMessage] = useState(null)
   const [notificationColor, setNoficationColor] = useState('green')
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
+    )
   }, [])
 
   useEffect(() => {
@@ -48,9 +45,37 @@ const App = () => {
     }, 5000)
   }
 
+  const handleLike = async (blog) => {
+    try {
+      const returnedBlog = await blogService.update(blog)
+      setBlogs(blogs.map(
+        blog => blog.id.toString() === returnedBlog.id.toString()
+          ? { ...returnedBlog, user: blog.user }
+          : blog
+      )
+        .sort((a, b) => b.likes - a.likes)
+      )
+    }
+    catch (exception) {
+      handleException(exception)
+    }
+  }
+
+  const handleDelete = async (deletee) => {
+    if (window.confirm(`Remove blog ${deletee.title} by ${deletee.author}`)) {
+      try {
+        await blogService.remove(deletee.id)
+        setBlogs(blogs.filter(blog => blog.id !== deletee.id))
+      }
+      catch (exception) {
+        handleException(exception)
+      }
+    }
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault()
-  
+
     try {
       const user = await loginService.login({
         username, password
@@ -62,26 +87,18 @@ const App = () => {
       setUsername('')
       setPassword('')
       handleNotification(`Welcom ${user.name}`)
+      blogService.setToken(user.token)
     }
     catch (exception) {
       handleException(exception)
     }
   }
 
-  const handleCreateBlog = async (event) => {
-    event.preventDefault()
-    
+  const addBlog = async (blogObject) => {
     try {
-      const newBlog = await blogService.create({
-        title,
-        author,
-        url
-      })
-      setBlogs(blogs.concat(newBlog))
-      setAuthor('')
-      setUrl('')
-      setTitle('')
-      handleNotification(`a new blog ${newBlog.title} by ${newBlog.author} added!`)
+      const returnedBlog = await blogService.create( blogObject )
+      setBlogs(blogs.concat({ ...returnedBlog, user: { name: user.name } }))
+      handleNotification(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added!`)
     }
     catch(exception) {
       handleException(exception)
@@ -114,20 +131,19 @@ const App = () => {
       <h2>blogs</h2>
       <Notification message={NotificationMessage} color={notificationColor}/>
       <p>
-        {user.username} logged in
+        {user.name} logged in
         <button onClick={handleLogout}>logout</button>
       </p>
-      <CreateBlogForm
-        title={title}
-        setTitle={setTitle}
-        author={author}
-        setAuthor={setAuthor}
-        url={url}
-        setUrl={setUrl}
-        handleSubmit={handleCreateBlog}
+      <BlogForm createBlog={addBlog}
       />
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog
+          key={blog.id}
+          blog={blog}
+          handleLike={handleLike}
+          user={user.username}
+          handleDelete={handleDelete}
+        />
       )}
     </div>
   )
