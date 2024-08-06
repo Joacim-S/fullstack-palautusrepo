@@ -8,7 +8,7 @@ const LoginForm = ({
   handleLogin
 }) => {
 
-  LoginForm.PropTypes = {
+  LoginForm.propTypes = {
     username: PropTypes.string.isRequired,
     setUsername: PropTypes.func.isRequired,
     password: PropTypes.string.isRequired,
@@ -23,6 +23,7 @@ const LoginForm = ({
         <div>
           username
           <input
+            data-testid='username'
             type='text'
             value={username}
             name='Username'
@@ -32,6 +33,7 @@ const LoginForm = ({
         <div>
           password
           <input
+            data-testid='password'
             type='password'
             value={password}
             name='Password'

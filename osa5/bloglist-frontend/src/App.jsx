@@ -15,10 +15,11 @@ const App = () => {
   const [notificationColor, setNoficationColor] = useState('green')
 
   useEffect(() => {
+    console.log('rendering')
     blogService.getAll().then(blogs =>
       setBlogs(blogs.sort((a, b) => b.likes - a.likes))
     )
-  }, [])
+  }, [user])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
