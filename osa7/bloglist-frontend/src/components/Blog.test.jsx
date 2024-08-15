@@ -7,7 +7,7 @@ test('renders title and author', () => {
     title: 'test Blog',
     author: 'test Author',
     url: 'test url',
-    likes: 10
+    likes: 10,
   }
 
   render(<Blog blog={blog} />)
@@ -20,7 +20,7 @@ test('renders url and likes after clicking view', async () => {
     author: 'test Author',
     url: 'test url',
     likes: 10,
-    user: { name: 'testname' }
+    user: { name: 'testname' },
   }
 
   render(<Blog blog={blog} />)
@@ -39,14 +39,12 @@ test('liking twice causes two likehandler calls', async () => {
     author: 'test Author',
     url: 'test url',
     likes: 10,
-    user: { name: 'testname' }
+    user: { name: 'testname' },
   }
 
   const mockHandler = vi.fn()
 
-  render(
-    <Blog blog={blog} handleLike={mockHandler} />
-  )
+  render(<Blog blog={blog} handleLike={mockHandler} />)
 
   const user = userEvent.setup()
 

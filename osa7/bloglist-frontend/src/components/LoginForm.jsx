@@ -5,18 +5,17 @@ const LoginForm = ({
   setUsername,
   password,
   setPassword,
-  handleLogin
+  handleLogin,
 }) => {
-
   LoginForm.propTypes = {
     username: PropTypes.string.isRequired,
     setUsername: PropTypes.func.isRequired,
     password: PropTypes.string.isRequired,
     setPassword: PropTypes.func.isRequired,
-    handleLogin: PropTypes.func.isRequired
+    handleLogin: PropTypes.func.isRequired,
   }
 
-  return(
+  return (
     <div>
       <h2>log in to application</h2>
       <form onSubmit={handleLogin}>

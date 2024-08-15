@@ -6,12 +6,12 @@ const BlogForm = ({ createBlog }) => {
   const [url, setUrl] = useState('')
   const [visible, setVisible] = useState(false)
 
-  const addBlog = (event) => {
+  const addBlog = event => {
     event.preventDefault()
     createBlog({
       title,
       author,
-      url
+      url,
     })
     setAuthor('')
     setUrl('')

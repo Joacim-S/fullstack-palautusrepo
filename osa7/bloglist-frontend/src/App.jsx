@@ -16,14 +16,14 @@ const App = () => {
 
   useEffect(() => {
     console.log('rendering')
-    blogService.getAll().then(blogs =>
-      setBlogs(blogs.sort((a, b) => b.likes - a.likes))
-    )
+    blogService
+      .getAll()
+      .then(blogs => setBlogs(blogs.sort((a, b) => b.likes - a.likes)))
   }, [user])
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogAppUser')
-    if (loggedUserJSON){
+    if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
@@ -46,67 +46,66 @@ const App = () => {
     }, 5000)
   }
 
-  const handleLike = async (blog) => {
+  const handleLike = async blog => {
     try {
       const returnedBlog = await blogService.update(blog)
-      setBlogs(blogs.map(
-        blog => blog.id.toString() === returnedBlog.id.toString()
-          ? { ...returnedBlog, user: blog.user }
-          : blog
+      setBlogs(
+        blogs
+          .map(blog =>
+            blog.id.toString() === returnedBlog.id.toString()
+              ? { ...returnedBlog, user: blog.user }
+              : blog,
+          )
+          .sort((a, b) => b.likes - a.likes),
       )
-        .sort((a, b) => b.likes - a.likes)
-      )
-    }
-    catch (exception) {
+    } catch (exception) {
       handleException(exception)
     }
   }
 
-  const handleDelete = async (deletee) => {
+  const handleDelete = async deletee => {
     if (window.confirm(`Remove blog ${deletee.title} by ${deletee.author}`)) {
       try {
         await blogService.remove(deletee.id)
         setBlogs(blogs.filter(blog => blog.id !== deletee.id))
-      }
-      catch (exception) {
+      } catch (exception) {
         handleException(exception)
       }
     }
   }
 
-  const handleLogin = async (event) => {
+  const handleLogin = async event => {
     event.preventDefault()
 
     try {
       const user = await loginService.login({
-        username, password
+        username,
+        password,
       })
-      window.localStorage.setItem(
-        'loggedBlogAppUser', JSON.stringify(user)
-      )
+      window.localStorage.setItem('loggedBlogAppUser', JSON.stringify(user))
       setUser(user)
       setUsername('')
       setPassword('')
       handleNotification(`Welcom ${user.name}`)
       blogService.setToken(user.token)
-    }
-    catch (exception) {
+    } catch (exception) {
       handleException(exception)
     }
   }
 
-  const addBlog = async (blogObject) => {
+  const addBlog = async blogObject => {
     try {
-      const returnedBlog = await blogService.create( blogObject )
+      const returnedBlog = await blogService.create(blogObject)
       setBlogs(blogs.concat({ ...returnedBlog, user: { name: user.name } }))
-      handleNotification(`a new blog ${returnedBlog.title} by ${returnedBlog.author} added!`)
-    }
-    catch(exception) {
+      handleNotification(
+        `a new blog ${returnedBlog.title} by ${returnedBlog.author} added!`,
+      )
+    } catch (exception) {
       handleException(exception)
     }
   }
 
-  const handleLogout  = () => {
+  const handleLogout = () => {
     setUser(null)
     window.localStorage.removeItem('loggedBlogAppUser')
   }
@@ -114,7 +113,7 @@ const App = () => {
   if (!user) {
     return (
       <div>
-        <Notification message={NotificationMessage} color={notificationColor}/>
+        <Notification message={NotificationMessage} color={notificationColor} />
         <LoginForm
           username={username}
           setUsername={setUsername}
@@ -130,14 +129,13 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={NotificationMessage} color={notificationColor}/>
+      <Notification message={NotificationMessage} color={notificationColor} />
       <p>
         {user.name} logged in
         <button onClick={handleLogout}>logout</button>
       </p>
-      <BlogForm createBlog={addBlog}
-      />
-      {blogs.map(blog =>
+      <BlogForm createBlog={addBlog} />
+      {blogs.map(blog => (
         <Blog
           key={blog.id}
           blog={blog}
@@ -145,7 +143,7 @@ const App = () => {
           user={user.username}
           handleDelete={handleDelete}
         />
-      )}
+      ))}
     </div>
   )
 }
