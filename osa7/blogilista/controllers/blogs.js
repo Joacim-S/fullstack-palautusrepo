@@ -1,6 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const middleware = require('../utils/middleware')
 require('express-async-errors')
 
 blogsRouter.get('/', async (request, response) => {
@@ -12,7 +11,7 @@ blogsRouter.get('/', async (request, response) => {
   response.json(blogs)
 })
 
-blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
+blogsRouter.post('/', async (request, response) => {
   const body = request.body
   const user = request.user
 
@@ -31,20 +30,16 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response) => {
   response.status(201).json(savedBlog)
 })
 
-blogsRouter.delete(
-  '/:id',
-  middleware.userExtractor,
-  async (request, response) => {
-    const blog = await Blog.findById(request.params.id)
-    if (!blog || blog.user.toString() === request.user._id.toString()) {
-      await Blog.findByIdAndDelete(request.params.id)
-      return response.status(204).end()
-    }
-    return response
-      .status(401)
-      .json({ error: 'user id does not match blog creator id' })
-  },
-)
+blogsRouter.delete('/:id', async (request, response) => {
+  const blog = await Blog.findById(request.params.id)
+  if (!blog || blog.user.toString() === request.user._id.toString()) {
+    await Blog.findByIdAndDelete(request.params.id)
+    return response.status(204).end()
+  }
+  return response
+    .status(401)
+    .json({ error: 'user id does not match blog creator id' })
+})
 
 blogsRouter.put('/:id', async (request, response) => {
   const updatedBlog = await Blog.findByIdAndUpdate(
