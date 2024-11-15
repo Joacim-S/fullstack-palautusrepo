@@ -48,11 +48,11 @@ export const updateBlog = blog => {
   }
 }
 
-export const createBlog = blogObject => {
+export const createBlog = (blogObject, name) => {
   return async dispatch => {
     try {
       const returnedBlog = await blogService.create(blogObject)
-      dispatch(append({ ...returnedBlog, user: { name: 'user.name' } })) //TODO: Fix user.name after moving login to redux
+      dispatch(append({ ...returnedBlog, user: { name: name } }))
       dispatch(
         setNotification(
           `a new blog ${returnedBlog.title} by ${returnedBlog.author} added!`,

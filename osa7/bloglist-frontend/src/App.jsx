@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react'
-import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import { useSelector, useDispatch } from 'react-redux'
 import { initializeBlogs } from './reducers/blogReducer'
 import { initializeUser, logInUser, logoutUsser } from './reducers/userReducer'
+import { Routes, Route, Link } from 'react-router-dom'
+import Blogs from './components/Blogs'
+import Users from './components/Users'
 
 const App = () => {
   const dispatch = useDispatch()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
-  const blogs = useSelector(state => state.blogs)
   const user = useSelector(state => state.user)
 
   useEffect(() => {
@@ -53,10 +53,10 @@ const App = () => {
         {user.name} logged in
         <button onClick={() => dispatch(logoutUsser())}>logout</button>
       </p>
-      <BlogForm />
-      {blogs.map(blog => (
-        <Blog key={blog.id} blog={blog} user={user.username} />
-      ))}
+      <Routes>
+        <Route path='/' element={<Blogs />} />
+        <Route path='users' element={<Users />} />
+      </Routes>
     </div>
   )
 }
